@@ -1,0 +1,127 @@
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #BDD4DC;
+    padding: 10px 30px;
+    padding-block: 20px;
+    color: white;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+header a {
+    text-decoration: none;
+    color: black;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+body{
+    background-color: #c1c2c2;
+    height: 800px;
+    margin: 0;
+}
+
+footer{
+    display: flex;
+    background-color: #BDD4DC;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+link{
+    color: white;
+    text-decoration: none !important;
+}
+
+.btn-outline-success {
+    --bs-btn-color: white !important;
+    --bs-btn-border-color: white !important;
+    --bs-btn-hover-bg: white !important;
+    --bs-btn-hover-color: black !important;
+    --bs-btn-hover-border-color: white !important;
+}
+
+input.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Für kleine Bildschirme hilfreich */
+}
+
+.logo-title {
+    text-decoration: none;
+    color: white;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+}
+
+.card{
+    border: none!important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+    margin: 10px!important;
+    width: 300px!important;
+    align-items: center;
+    padding-block: 20px;
+}
+
+.cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 100% !important;
+    }
+}
+
+.card-header {
+    background-color: #4A90E2 !important;
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 1.2rem !important;
+    text-transform: capitalize !important;
+    text-align: center !important;
+    padding: 10px !important;
+    border-radius: 20px !important;
+}
+
+.blockquote-footer {
+    background-color: #e3f2fd;
+    font-size: 0.9rem;
+    color: #333;
+    padding: 10px;
+     border-radius: 20px !important;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.blockquote-footer p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.blockquote-footer cite {
+    font-style: normal;
+    color: #555;
+}
