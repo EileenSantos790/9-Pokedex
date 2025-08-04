@@ -1,54 +1,38 @@
-const BASE_URL = "https://pokeapi.co/api/v2/pokemon?limit=60";
-
+const Limit = 18;
+let currentOffset = 0;
 const pokemonCollection = [];
-let loadQuantity = 30;
-let index = 1;
 
 function init() {
-
     loadData();
-    //showMorePokemon();
 }
 
+function getApiUrl() {
+    return 'https://pokeapi.co/api/v2/pokemon?limit=' + Limit + '&offset=' + currentOffset;
+}
 
 async function loadData() {
-
-    let response = await fetch(BASE_URL);
+    let response = await fetch(getApiUrl());
     let data = await response.json();
     let pokemonList = data.results;
 
-    if (index <= loadQuantity) {
-        for (pokemon of pokemonList) {
-            debugger
-            console.log(index);
+    for (let [index, pokemon] of pokemonList.entries()) {
+        index++
+        let detailsResponse = await fetch(pokemon.url); 
+        let pokemonDetails = await detailsResponse.json();
 
-            let response = await fetch(pokemon.url);
-            let pokemonDetails = await response.json();
+        pokemonCollection.push(pokemonDetails);
 
-            pokemonCollection.push(pokemonDetails);
-
-            if (index % 3 === 0 && index <= loadQuantity) {
-                const pokemonNoEvolutionIndex = pokemonCollection.length - 3;
-                renderPokemon(pokemonCollection, pokemonNoEvolutionIndex);
-            }
-            index++;
+        if (index % 3 === 0) {
+            const pokemonNoEvolutionIndex = pokemonCollection.length - 3;
+            renderPokemon(pokemonCollection, pokemonNoEvolutionIndex);
         }
     }
 }
 
 function showMorePokemon() {
-    // const totalPokemon = pokemonCollection.length / 3;
-
-    // if (pokemonCollection.length / 3 < loadQuantity) {
-    //     loadData(pokemonCollection.length + 21);
-    // }
-    // if (pokemonCollection.length >= 63) {
-    //     loadData(63);
-    // }
-    loadQuantity += 21;
+    currentOffset = currentOffset + Limit;
     loadData();
 }
-
 
 function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
     const container = document.getElementById('pokedex');
@@ -132,24 +116,19 @@ function closeSecondOverlay() {
 }
 
 function searchByType() {
-    const inputField = document.getElementById('searchTypeField').value;
-    const input = inputField.toLowerCase().trim();
-    const container = document.getElementById('pokedex');
-    container.innerHTML = '';
 
-    if (input === '' || input === 'all') {
-        for (let index = 0; index < pokemonCollection.length; index += 3) {
-            renderPokemon(pokemonCollection, index);
-        }
-        return;
-    }
+    // const inputField = document.getElementById('searchTypeField').value;
+    // const input = inputField.toLowerCase().trim();
+    // const container = document.getElementById('pokedex');
+    // container.innerHTML = '';
+    // debugger
 
-    const filtered = pokemonCollection.filter(pokemon =>
-        pokemon.types.some(t => t.type.name === input)
-    );
+    // const filtered = pokemonCollection.filter(pokemon =>
+    //     pokemon.types.some(t => t.type.name === input)
+    // );
 
-    filtered.forEach(p => {
-        const list = pokemonCollection.indexOf(p);
-        renderPokemon(pokemonCollection, list);
-    });
+    // filtered.forEach(p => {
+    //     const list = pokemonCollection.indexOf(p);
+    //     renderPokemon(pokemonCollection, list);
+    // });
 }
