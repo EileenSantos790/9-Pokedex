@@ -80,6 +80,12 @@ input.form-control {
     padding-block: 20px;
 }
 
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
 .cardContainer {
     display: flex;
     flex-wrap: wrap;
@@ -114,14 +120,55 @@ input.form-control {
      border-radius: 20px !important;
     text-align: center;
     margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .blockquote-footer p {
     margin: 0;
+    padding-inline: 30px;
     font-weight: bold;
 }
 
 .blockquote-footer cite {
     font-style: normal;
     color: #555;
+}
+
+.blockquote-footer::before {
+    display: none;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-content {
+    z-index: 1001;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #0003;
+}
+
+.secondOverlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1100;
+    width: 300px;
+    background-color: #4B8FE2;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
 }

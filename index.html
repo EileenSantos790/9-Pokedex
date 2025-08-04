@@ -7,9 +7,7 @@
     <link rel="icon" href="./assets/img/pokemon-1536849_640.png">
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/assets-style.css">
-    <script src="./js/db.json"></script>
     <script src="./js/main.js"></script>
-    <script src="./js/tamplate.js"></script>
 
     <!--- bootstrap files --->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
@@ -26,20 +24,19 @@
         </a>
     </div>
     <form class="search-form">
-        <input class="form-control" type="search" placeholder="Suchen" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Suchen</button>
+        <input id="searchTypeField" class="form-control" type="search" placeholder="suche z.B. fire, water..." aria-label="Search">
+        <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
     </form>
 </header>
-
         <main>
             <div id="pokedex" class="cardContainer"></div>
-            <div><button>Weitere anzeigen</button></div>
+            <div id="profileConteiner" class="overlay"></div>
+            <div><button id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button></div>
         </main>
 
         <footer>
-            <link rel="./impressum.html">
+            <a href="./impressum.html"></a>
         </footer>
-
     </div>
 </body>
 
