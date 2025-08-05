@@ -8,23 +8,34 @@ function init() {
 
 function getApiUrl() {
     return 'https://pokeapi.co/api/v2/pokemon?limit=' + Limit + '&offset=' + currentOffset;
+    //https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0
 }
 
-async function loadData() {
-    let response = await fetch(getApiUrl());
-    let data = await response.json();
-    let pokemonList = data.results;
+async function loadData(isSearch = false, filteredData = null) {
+    let pokemonList = [];
+    let pokemonFilteres = [];
+
+    if (!isSearch && !filteredData) {
+        let response = await fetch(getApiUrl());
+        data = await response.json();
+        pokemonList = data.results;
+    } else {
+        pokemonList = filteredData;
+    }
 
     for (let [index, pokemon] of pokemonList.entries()) {
         index++
-        let detailsResponse = await fetch(pokemon.url); 
+        let detailsResponse = await fetch(pokemon.url);
         let pokemonDetails = await detailsResponse.json();
 
         pokemonCollection.push(pokemonDetails);
 
-        if (index % 3 === 0) {
+        if (index % 3 === 0 && !filteredData) {
             const pokemonNoEvolutionIndex = pokemonCollection.length - 3;
             renderPokemon(pokemonCollection, pokemonNoEvolutionIndex);
+        } else if (filteredData) {
+            pokemonFilteres.push(pokemonDetails);
+            renderPokemon(pokemonFilteres, null);
         }
     }
 }
@@ -36,36 +47,73 @@ function showMorePokemon() {
 
 function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
     const container = document.getElementById('pokedex');
-    const pokemon = pokemonCollection[pokemonNoEvolutionIndex];
+    const pokemon = pokemonCollection[pokemonNoEvolutionIndex] || pokemonCollection;
     const types = pokemon.types.map(t => t.type.name);
 
-    const typeIcons = types.map(type => {
-        switch (type) {
-            case 'fire': return '🔥';
-            case 'water': return '💧';
-            case 'grass': return '🌿';
-            case 'electric': return '⚡';
-            case 'poison': return '☠️';
-            case 'ground': return '🌍';
-            case 'flying': return '🕊️';
-            case 'bug': return '🐛';
-            case 'fairy': return '✨';
-            case 'normal': return '⭐';
-            default: return type;
-        }
-    }).join(' ');
+    // const typeIcons = types.map(type => {
+    //     switch (type) {
+    //         case 'fire': return 'Feuer';
+    //         case 'water': return 'Wasser';
+    //         case 'grass': return 'Grass';
+    //         case 'electric': return 'Elektrik';
+    //         case 'poison': return 'Gift';
+    //         case 'ground': return 'Erde';
+    //         case 'flying': return 'Flug';
+    //         case 'bug': return 'Käfer';
+    //         case 'fairy': return 'Fee';
+    //         case 'normal': return 'Normal';
+    //         case 'fighting': return 'Kampf';
+    //         case 'psychic': return 'Psycho';
+    //         case 'rock': return 'Gestein';
+    //         case 'ghost': return 'Geist';
+    //         case 'steel': return 'Stahl';
+    //         case 'ice': return 'Eis';
+    //         case 'dragon': return 'Drache';
+    //         case 'dark': return 'Unlicht';
+    //         case 'shadow': return 'Schatten';
+    //         default: return type;
+    //     }
 
-    container.innerHTML += `
+    // }).join(' ');
+
+
+    if (pokemonNoEvolutionIndex !== null) { // Carregamento inicial
+        const name = pokemonCollection[pokemonNoEvolutionIndex].name;
+        const image = pokemonCollection[pokemonNoEvolutionIndex].sprites.other['official-artwork'].front_default;
+        const altImage = pokemonCollection[pokemonNoEvolutionIndex].name;
+
+        container.innerHTML += `
             <div class="card" onclick="toggleOverlay()">
-                <div class="card-header">${pokemonCollection[pokemonNoEvolutionIndex].name}</div>
+                <div class="card-header">${name}</div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
-                        <p><img src="${pokemonCollection[pokemonNoEvolutionIndex].sprites.other['official-artwork'].front_default}" alt="${pokemonCollection[pokemonNoEvolutionIndex].name}" class="pokemonImg"></img></p>
-                        <footer class="blockquote-footer"><p>${typeIcons}</p></footer>
+                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
+                        <footer class="blockquote-footer"><p>ICONEEEE</p></footer>
                     </blockquote>
                 </div>
             </div>
         `;
+    } else { // Busca por tipo
+        container.innerHTML = ''; // limpar html
+        for (const pokemon of pokemonCollection) {
+            console.log(pokemon.name);
+            const name = pokemon.name;
+            const image = pokemon.sprites.other['official-artwork'].front_default;
+            const altImage = pokemon.name;
+
+            container.innerHTML += `
+            <div class="card" onclick="toggleOverlay()">
+                <div class="card-header">${name}</div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
+                        <footer class="blockquote-footer"><p>ICONEEEE</p></footer>
+                    </blockquote>
+                </div>
+            </div>
+        `;
+        }
+    }
 }
 
 function openOverlay() {
@@ -115,20 +163,24 @@ function closeSecondOverlay() {
     document.getElementById('secondOverlay').style.display = 'none';
 }
 
-function searchByType() {
+async function searchByType() {
+    const inputField = document.getElementById('searchTypeField').value;
+    const input = inputField.toLowerCase().trim();
+    const container = document.getElementById('pokedex');
+    container.innerHTML = '';
 
-    // const inputField = document.getElementById('searchTypeField').value;
-    // const input = inputField.toLowerCase().trim();
-    // const container = document.getElementById('pokedex');
-    // container.innerHTML = '';
-    // debugger
+    const response = await fetch("https://pokeapi.co/api/v2/type/" + input);
+    const data = await response.json();
+    const pokemonList = [];
 
-    // const filtered = pokemonCollection.filter(pokemon =>
-    //     pokemon.types.some(t => t.type.name === input)
-    // );
+    if (!input) {
+        init();
+        return;
+    }
 
-    // filtered.forEach(p => {
-    //     const list = pokemonCollection.indexOf(p);
-    //     renderPokemon(pokemonCollection, list);
-    // });
+    for (let p of data.pokemon) {
+        pokemonList.push(p.pokemon);
+    }
+
+    loadData(true, pokemonList);
 }
