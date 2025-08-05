@@ -1,4 +1,3 @@
-
 header {
     display: flex;
     justify-content: space-between;
@@ -21,13 +20,13 @@ header h1 {
     font-size: 2rem;
 }
 
-body{
+body {
     background-color: #c1c2c2;
     height: 800px;
     margin: 0;
 }
 
-footer{
+footer {
     display: flex;
     background-color: #BDD4DC;
     padding: 20px;
@@ -36,7 +35,7 @@ footer{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-link{
+link {
     color: white;
     text-decoration: none !important;
 }
@@ -58,7 +57,8 @@ input.form-control {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Für kleine Bildschirme hilfreich */
+    flex-wrap: wrap;
+    /* Für kleine Bildschirme hilfreich */
 }
 
 .logo-title {
@@ -71,11 +71,11 @@ input.form-control {
     gap: 10px;
 }
 
-.card{
-    border: none!important;
+.card {
+    border: none !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
-    margin: 10px!important;
-    width: 300px!important;
+    margin: 10px !important;
+    width: 300px !important;
     align-items: center;
     padding-block: 20px;
 }
@@ -117,7 +117,7 @@ input.form-control {
     font-size: 0.9rem;
     color: #333;
     padding: 10px;
-     border-radius: 20px !important;
+    border-radius: 20px !important;
     text-align: center;
     margin-top: 10px;
     display: flex;
@@ -143,7 +143,8 @@ input.form-control {
 .overlay {
     display: none;
     position: fixed;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0.8);
@@ -172,3 +173,103 @@ input.form-control {
     padding: 20px;
     border-radius: 10px;
 }
+
+.type-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+.type-normal {
+    background-color: #A8A77A;
+}
+
+.type-fire {
+    background-color: #EE8130;
+}
+
+.type-water {
+    background-color: #6390F0;
+}
+
+.type-electric {
+    background-color: #F7D02C;
+    color: black;
+}
+
+.type-grass {
+    background-color: #7AC74C;
+}
+
+.type-ice {
+    background-color: #96D9D6;
+    color: black;
+}
+
+.type-fighting {
+    background-color: #C22E28;
+}
+
+.type-poison {
+    background-color: #A33EA1;
+}
+
+.type-ground {
+    background-color: #E2BF65;
+    color: black;
+}
+
+.type-flying {
+    background-color: #A98FF3;
+}
+
+.type-psychic {
+    background-color: #F95587;
+}
+
+.type-bug {
+    background-color: #A6B91A;
+}
+
+.type-rock {
+    background-color: #B6A136;
+}
+
+.type-ghost {
+    background-color: #735797;
+}
+
+.type-dragon {
+    background-color: #6F35FC;
+}
+
+.type-dark {
+    background-color: #705746;
+}
+
+.type-steel {
+    background-color: #B7B7CE;
+    color: black;
+}
+
+.type-fairy {
+    background-color: #D685AD;
+}
+
+.loadMoreButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+

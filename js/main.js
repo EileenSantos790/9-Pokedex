@@ -48,39 +48,15 @@ function showMorePokemon() {
 function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
     const container = document.getElementById('pokedex');
     const pokemon = pokemonCollection[pokemonNoEvolutionIndex] || pokemonCollection;
-    const types = pokemon.types.map(t => t.type.name);
-
-    // const typeIcons = types.map(type => {
-    //     switch (type) {
-    //         case 'fire': return 'Feuer';
-    //         case 'water': return 'Wasser';
-    //         case 'grass': return 'Grass';
-    //         case 'electric': return 'Elektrik';
-    //         case 'poison': return 'Gift';
-    //         case 'ground': return 'Erde';
-    //         case 'flying': return 'Flug';
-    //         case 'bug': return 'Käfer';
-    //         case 'fairy': return 'Fee';
-    //         case 'normal': return 'Normal';
-    //         case 'fighting': return 'Kampf';
-    //         case 'psychic': return 'Psycho';
-    //         case 'rock': return 'Gestein';
-    //         case 'ghost': return 'Geist';
-    //         case 'steel': return 'Stahl';
-    //         case 'ice': return 'Eis';
-    //         case 'dragon': return 'Drache';
-    //         case 'dark': return 'Unlicht';
-    //         case 'shadow': return 'Schatten';
-    //         default: return type;
-    //     }
-
-    // }).join(' ');
-
 
     if (pokemonNoEvolutionIndex !== null) { // Carregamento inicial
         const name = pokemonCollection[pokemonNoEvolutionIndex].name;
         const image = pokemonCollection[pokemonNoEvolutionIndex].sprites.other['official-artwork'].front_default;
         const altImage = pokemonCollection[pokemonNoEvolutionIndex].name;
+        const types = pokemonCollection[pokemonNoEvolutionIndex].types.map(t => t.type.name);
+        const typesHtml = types
+            .map(type => `<span class="type-badge type-${type}">${type}</span>`)
+            .join(' ');
 
         container.innerHTML += `
             <div class="card" onclick="toggleOverlay()">
@@ -88,7 +64,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
                         <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
-                        <footer class="blockquote-footer"><p>ICONEEEE</p></footer>
+                        <div><p>${typesHtml}</p></div>
                     </blockquote>
                 </div>
             </div>
@@ -100,6 +76,8 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
             const name = pokemon.name;
             const image = pokemon.sprites.other['official-artwork'].front_default;
             const altImage = pokemon.name;
+            const types = pokemon.types.map(t => t.type.name);
+            const typesString = types.join(', ');
 
             container.innerHTML += `
             <div class="card" onclick="toggleOverlay()">
@@ -107,7 +85,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
                         <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
-                        <footer class="blockquote-footer"><p>ICONEEEE</p></footer>
+                        <footer class="blockquote-footer"><p>${typesString}</p></footer>
                     </blockquote>
                 </div>
             </div>
