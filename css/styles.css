@@ -93,6 +93,7 @@ input.form-control {
     flex-direction: row;
     gap: 20px;
     padding: 20px;
+    width: 80%;
 }
 
 @media (max-width: 768px) {
@@ -138,40 +139,6 @@ input.form-control {
 
 .blockquote-footer::before {
     display: none;
-}
-
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.overlay-content {
-    z-index: 1001;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #0003;
-}
-
-.secondOverlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1100;
-    width: 300px;
-    background-color: #4B8FE2;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
 }
 
 .type-badge {
@@ -273,3 +240,31 @@ input.form-control {
     cursor: pointer;
 }
 
+.mainContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.detailsContainer{
+    position: fixed;
+    padding-block: 30px;
+    display: flex;
+    right: 0;
+    height: 100%;
+    width: 20%;
+}
+
+.detailsHeader{
+    display: flex;
+    justify-content: space-between;
+    background-color: #4B90E2;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.headerComplete {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}

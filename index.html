@@ -16,24 +16,38 @@
 
 <body onload="init()">
     <div>
-
-<header>
-    <div class="header-container">
-        <a href="./index.html" class="logo-title">
-            <h1>Pokedex</h1>
-        </a>
+        <header>
+            <div class="header-container">
+                <a href="./index.html" class="logo-title">
+                    <h1>Pokedex</h1>
+                </a>
+            </div>
+            <div class="search-form">
+                <input id="searchTypeField" class="form-control" type="search" placeholder="suche z.B. fire, water..." aria-label="Search">
+                <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
+            </div>
+        </header>
     </div>
-    <div class="search-form">
-        <input id="searchTypeField" class="form-control" type="search" placeholder="suche z.B. fire, water..." aria-label="Search">
-        <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
-    </div>
-</header>
+    <div class="mainContainer">
         <main>
             <div id="pokedex" class="cardContainer"></div>
             <div id="profileConteiner" class="overlay"></div>
             <div><button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button></div>
         </main>
-
+        <div class="detailsContainer" id="detailsContainer">
+            <div>
+                <div class="card" id=${name}>
+                <div class="card-header">${name}</div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
+                        <div><p>${typesHtml}</p></div>
+                    </blockquote>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
         <footer>
             <a href="./impressum.html"></a>
         </footer>

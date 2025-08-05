@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,27 +10,29 @@
     <script src="../scripts/pokedex.js"></script>
     <script src=""></script>
 </head>
-    <body onload="init()">
-        <div>
 
-            <header>
-                <div>
-                    <a href="./index.html">
-                        <h1>Pokedex</h1>
-                    </a>
-                    <input type="text" id="search" placeholder="Such dein Pokémon" >
-                </div>
-            </header>
+<body onload="init()">
+    <div>
+        <header>
+            <div>
+                <a href="./index.html">
+                    <h1>Pokedex</h1>
+                </a>
+                <input type="text" id="search" placeholder="Such dein Pokémon">
+            </div>
+        </header>
+    </div>
+    <div>
+        <main>
+            <div id="pokedex"></div>
+            <div><button onclick="loadMore()">Weitere anzeigen</button></div>
+        </main>
 
-            <main>
-                <div id="pokedex"></div>
-                <div><button onclick="loadMore()">Weitere anzeigen</button></div>
-            </main>
+        <footer>
+            <link rel="./impressum.html">
+        </footer>
 
-            <footer>
-                <link rel="./impressum.html">
-            </footer>
+    </div>
+</body>
 
-        </div>
-    </body>
 </html>

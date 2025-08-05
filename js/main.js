@@ -59,7 +59,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
             .join(' ');
 
         container.innerHTML += `
-            <div class="card" onclick="toggleOverlay()">
+            <div class="card" onclick="toggleOverlay()" id=${name}>
                 <div class="card-header">${name}</div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
@@ -78,6 +78,10 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
             const altImage = pokemon.name;
             const types = pokemon.types.map(t => t.type.name);
             const typesString = types.join(', ');
+            const typesHtml = types
+                .map(type => `<span class="type-badge type-${type}">${type}</span>`)
+                .join(' ');
+
 
             container.innerHTML += `
             <div class="card" onclick="toggleOverlay()">
@@ -85,7 +89,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
                         <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
-                        <footer class="blockquote-footer"><p>${typesString}</p></footer>
+                        <div><p>${typesHtml}</p></div>
                     </blockquote>
                 </div>
             </div>
@@ -93,37 +97,6 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
         }
     }
 }
-
-function openOverlay() {
-    const overlay = document.getElementById('profileConteiner');
-    overlay.style.display = 'flex';
-    overlay.innerHTML = `
-        <div class="overlay-content"><div class="pokemon-details"><h2>Pokémon Details</h2></div></div>
-        <div class="secondOverlay" id="secondOverlay">
-            <div class="secondOverlay-content p-3">
-                <button onclick="closeOverlay()" type="button" class="btn-close" aria-label="Close"></button>
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="">Active</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    `;
-}
-
-function closeOverlay() {
-    const overlay = document.getElementById('profileConteiner');
-    overlay.style.display = 'none';
-    overlay.innerHTML = '';
-}
-
 function toggleOverlay() {
     const overlay = document.getElementById('profileConteiner');
     if (overlay.style.display === 'flex') {
@@ -133,12 +106,36 @@ function toggleOverlay() {
     }
 }
 
-function openSecondOverlay() {
-    document.getElementById('secondOverlay').style.display = 'flex';
+function openOverlay() {
+    const overlay = document.getElementById('detailsContainer');
+    const name = pokemonCollection[pokemonNoEvolutionIndex].name;
+    const image = pokemonCollection[pokemonNoEvolutionIndex].sprites.other['official-artwork'].front_default;
+    const altImage = pokemonCollection[pokemonNoEvolutionIndex].name;
+    const types = pokemonCollection[pokemonNoEvolutionIndex].types.map(t => t.type.name);
+    const typesHtml = types
+        .map(type => `<span class="type-badge type-${type}">${type}</span>`)
+        .join(' ');
+        
+    overlay.style.display = 'flex';
+
+    overlay.innerHTML += `
+
+    <div class="card" id=${name}>
+                <div class="card-header">${name}</div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
+                        <div><p>${typesHtml}</p></div>
+                    </blockquote>
+                </div>
+            </div>
+    `
 }
 
-function closeSecondOverlay() {
-    document.getElementById('secondOverlay').style.display = 'none';
+function closeOverlay() {
+    const overlay = document.getElementById('profileConteiner');
+    overlay.style.display = 'none';
+    overlay.innerHTML = '';
 }
 
 async function searchByType() {
