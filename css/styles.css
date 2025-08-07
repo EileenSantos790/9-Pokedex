@@ -93,7 +93,6 @@ input.form-control {
     flex-direction: row;
     gap: 20px;
     padding: 20px;
-    width: 80%;
 }
 
 @media (max-width: 768px) {
@@ -245,26 +244,61 @@ input.form-control {
     flex-direction: row;
 }
 
-.detailsContainer{
-    position: fixed;
-    padding-block: 30px;
-    display: flex;
-    right: 0;
-    height: 100%;
-    width: 20%;
+.leftContainer {
+    width: 80%;
 }
 
-.detailsHeader{
-    display: flex;
-    justify-content: space-between;
-    background-color: #4B90E2;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 10px;
+.rightContainer {
+    padding-right: 20px;
+    padding-block: 20px;
 }
 
-.headerComplete {
+.cardDetails {
+    width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 16px;
+}
+
+.overlayCard{
+    position:fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buttonDetails {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    padding: 10px;
+    margin-block: 20px;
+
+}
+
+.heigthField {
+    background-color: grey;
+}
+
+.weightField {
+    background-color: grey
+}
+
+.secondpartofOverlay {
+    flex-direction: row;
     justify-content: space-between;
-    gap: 30px;
+    height: fit-content;
+}
+
+.abilities {
+    background-color: grey;
+    text-align: center;
 }

@@ -59,7 +59,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
             .join(' ');
 
         container.innerHTML += `
-            <div class="card" onclick="toggleOverlay()" id=${name}>
+            <div class="card" onclick="openOverlay(${pokemonNoEvolutionIndex})" id="${name}">
                 <div class="card-header">${name}</div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
@@ -84,7 +84,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
 
 
             container.innerHTML += `
-            <div class="card" onclick="toggleOverlay()">
+            <div class="card" class="cardDetails" onclick="openOverlayByName('${name}')">
                 <div class="card-header">${name}</div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
@@ -98,7 +98,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
     }
 }
 function toggleOverlay() {
-    const overlay = document.getElementById('profileConteiner');
+    const overlay = document.getElementById('detailsContainer');
     if (overlay.style.display === 'flex') {
         closeOverlay();
     } else {
@@ -106,36 +106,45 @@ function toggleOverlay() {
     }
 }
 
-function openOverlay() {
+function openOverlay(index) {
     const overlay = document.getElementById('detailsContainer');
-    const name = pokemonCollection[pokemonNoEvolutionIndex].name;
-    const image = pokemonCollection[pokemonNoEvolutionIndex].sprites.other['official-artwork'].front_default;
-    const altImage = pokemonCollection[pokemonNoEvolutionIndex].name;
-    const types = pokemonCollection[pokemonNoEvolutionIndex].types.map(t => t.type.name);
-    const typesHtml = types
-        .map(type => `<span class="type-badge type-${type}">${type}</span>`)
-        .join(' ');
-        
+    const pokemon = pokemonCollection[index];
+
+    const name = capitalizeFirstLetter(pokemon.name);
+    const image = pokemon.sprites.other['official-artwork'].front_default;
+    const altImage = name;
+    const types = pokemon.types.map(t => t.type.name);
+    const typesHtml = types.map(type => `<span class="type-badge type-${type}">${type}</span>`).join(' ');
+
     overlay.style.display = 'flex';
-
-    overlay.innerHTML += `
-
-    <div class="card" id=${name}>
-                <div class="card-header">${name}</div>
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
-                        <div><p>${typesHtml}</p></div>
-                    </blockquote>
+    overlay.innerHTML = `
+       <div class="overlayCard">
+            <div><button class="buttonDetails" onclick="closeOverlay()">X</button></div>
+            <h2>${name}</h2>
+            <div class="card-body">
+                <p><img src="${image}" alt="${altImage}" class="pokemonImg"></p>
+                <div><p>${typesHtml}</p></div>
+                <div class= secondpartofOverlay>
+                    <div class= "heigthField type-badge"><p>Height: ${pokemon.height / 10} m</p></div>
+                    <div class= "weightField type-badge"><p>Weight: ${pokemon.weight / 10} kg</p></div>
                 </div>
+                <div><p class="type-badge abilities">Abilities: ${pokemon.abilities.map(a => a.ability.name).join(', ')}</p></div>
             </div>
-    `
+        </div>
+    `;
 }
 
 function closeOverlay() {
-    const overlay = document.getElementById('profileConteiner');
+    const overlay = document.getElementById('detailsContainer');
     overlay.style.display = 'none';
     overlay.innerHTML = '';
+}
+
+function openOverlayByName(name) {
+    const index = pokemonCollection.findIndex(p => p.name === name);
+    if (index !== -1) {
+        openOverlay(index);
+    }
 }
 
 async function searchByType() {
@@ -158,4 +167,34 @@ async function searchByType() {
     }
 
     loadData(true, pokemonList);
+}
+
+function renderPokemonDetails(pokemon) {
+    const detailsContainer = document.getElementById('detailsContainer');
+    detailsContainer.innerHTML = '';
+
+    const image = pokemon.sprites.other['official-artwork'].front_default;
+    const altImage = pokemon.name;
+    const types = pokemon.types.map(t => t.type.name);
+    const typesHtml = types
+        .map(type => `<span class="type-badge type-${type}">${type}</span>`)
+        .join(' ');
+
+    detailsContainer.innerHTML += `
+        <div class="card">
+            <div class="card-header">${name}</div>
+            <div class="card-body">
+                <blockquote class="blockquote
+                mb-0">
+                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></p>
+                        <div><p>${typesHtml}</p></div>
+                </blockquote>
+            </div>
+        </div>
+    `;
+}
+
+function capitalizeFirstLetter(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
