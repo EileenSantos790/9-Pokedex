@@ -244,8 +244,8 @@ input.form-control {
     flex-direction: row;
 }
 
-.leftContainer {
-    width: 80%;
+.leftConteiner{
+    width: auto;
 }
 
 .rightContainer {
@@ -266,6 +266,8 @@ input.form-control {
     display: flex;
     flex-direction: column;
     align-items: center;
+    right: 40px;
+    max-width: 200px;
 }
 
 .buttonDetails {

@@ -109,6 +109,7 @@ function toggleOverlay() {
 function openOverlay(index) {
     const overlay = document.getElementById('detailsContainer');
     const pokemon = pokemonCollection[index];
+    const leftContainer = document.getElementById('leftContainer');
 
     const name = capitalizeFirstLetter(pokemon.name);
     const image = pokemon.sprites.other['official-artwork'].front_default;
@@ -116,6 +117,7 @@ function openOverlay(index) {
     const types = pokemon.types.map(t => t.type.name);
     const typesHtml = types.map(type => `<span class="type-badge type-${type}">${type}</span>`).join(' ');
 
+    leftContainer.style.width = '80%';
     overlay.style.display = 'flex';
     overlay.innerHTML = `
        <div class="overlayCard">
@@ -136,8 +138,10 @@ function openOverlay(index) {
 
 function closeOverlay() {
     const overlay = document.getElementById('detailsContainer');
+    const leftContainer = document.getElementById('leftContainer');
     overlay.style.display = 'none';
     overlay.innerHTML = '';
+    leftContainer.style.width = '';
 }
 
 function openOverlayByName(name) {
@@ -197,4 +201,24 @@ function renderPokemonDetails(pokemon) {
 function capitalizeFirstLetter(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function showNextEvolution(params) {
+    
+}
+
+
+function renderEvolutonChain(pokemonCollection) {
+    const evolutionContainer = document.getElementById('evolutionContainer');
+    let evolutionofPokemon = 
+
+    evolutionContainer.innerHTML += `
+        <div>
+            <p>Evolutions</p>
+            <div></div>
+        </div>
+    
+    `;
+
+    
 }
