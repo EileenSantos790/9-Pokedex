@@ -304,3 +304,9 @@ input.form-control {
     background-color: grey;
     text-align: center;
 }
+
+.loadMoreContainer{
+    display: none;
+    align-items: center;
+    justify-content: center;
+}

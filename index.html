@@ -37,11 +37,13 @@
         <main class="leftContainer" id="leftContainer">
             <div id="pokedex" class="cardContainer"></div>
             <div id="profileConteiner" class="overlay"></div>
-            <div><button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button></div>
+            <div>
+                <div class="loadMoreContainer" id="loadingSpinner"></div>
+                <button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button>
+            </div>
         </main>
         <div>
             <div class="rightContainer" id="detailsContainer"></div>
-            <div id="evolutionContainer"></div>
         </div>
     </div>
     <footer>

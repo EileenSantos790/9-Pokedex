@@ -1,6 +1,9 @@
 const Limit = 18;
 let currentOffset = 0;
+let tripletStartIndex = 0;
 const pokemonCollection = [];
+let isLoading = false;
+
 
 function init() {
     loadData();
@@ -12,12 +15,15 @@ function getApiUrl() {
 }
 
 async function loadData(isSearch = false, filteredData = null) {
+
+    await sleep(150);
+
     let pokemonList = [];
     let pokemonFilteres = [];
 
     if (!isSearch && !filteredData) {
         let response = await fetch(getApiUrl());
-        data = await response.json();
+        let data = await response.json();
         pokemonList = data.results;
     } else {
         pokemonList = filteredData;
@@ -40,9 +46,42 @@ async function loadData(isSearch = false, filteredData = null) {
     }
 }
 
-function showMorePokemon() {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function showMorePokemon() {
+    if (isLoading) return;
+    isLoading = true;
     currentOffset = currentOffset + Limit;
-    loadData();
+    const loadPokemon = document.getElementById ('loadMoreContainer');
+    const loadMoreBtn = document.getElementById('loadMoreButton');
+    if (loadMoreBtn) loadMoreBtn.disabled = true;
+    
+   if (!document.getElementById('loadingSpinner')) {
+        loadPokemon.style.display = 'flex';
+        loadPokemon.innerHTML = `
+            <div id="loadingSpinner" class="spinner-border" role="status">
+                <span class="sr-only"></span>
+            </div>
+        `;
+    }
+
+    try {
+        if (currentOffset < 72){
+            await loadData();
+        } else {
+            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+        }
+    } finally {
+        
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) spinner.remove();
+        loadPokemon.style.display = 'none';
+
+        if (loadMoreBtn) loadMoreBtn.disabled = false;
+        isLoading = false;
+    }
 }
 
 function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
@@ -97,6 +136,12 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
         }
     }
 }
+
+
+
+
+
+
 function toggleOverlay() {
     const overlay = document.getElementById('detailsContainer');
     if (overlay.style.display === 'flex') {
@@ -131,10 +176,15 @@ function openOverlay(index) {
                     <div class= "weightField type-badge"><p>Weight: ${pokemon.weight / 10} kg</p></div>
                 </div>
                 <div><p class="type-badge abilities">Abilities: ${pokemon.abilities.map(a => a.ability.name).join(', ')}</p></div>
+                <div id="evolutionContainer" ></div>
             </div>
         </div>
     `;
+    renderEvolutionChain(pokemon);
 }
+
+
+
 
 function closeOverlay() {
     const overlay = document.getElementById('detailsContainer');
@@ -203,9 +253,6 @@ function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function showNextEvolution(params) {
-    
-}
 
 
 function renderEvolutonChain(pokemonCollection) {
