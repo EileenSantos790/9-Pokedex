@@ -1,3 +1,8 @@
+html {
+    max-width: 1400px;
+}
+
+
 header {
     display: flex;
     justify-content: space-between;
@@ -64,6 +69,10 @@ input.form-control {
 .logo-title {
     text-decoration: none;
     color: white;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
 }
 
 .search-form {
