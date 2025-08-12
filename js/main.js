@@ -54,11 +54,11 @@ async function showMorePokemon() {
     if (isLoading) return;
     isLoading = true;
     currentOffset = currentOffset + Limit;
-    const loadPokemon = document.getElementById ('loadMoreContainer');
+    const loadPokemon = document.getElementById('loadMoreContainer');
     const loadMoreBtn = document.getElementById('loadMoreButton');
     if (loadMoreBtn) loadMoreBtn.disabled = true;
-    
-   if (!document.getElementById('loadingSpinner')) {
+
+    if (!document.getElementById('loadingSpinner')) {
         loadPokemon.style.display = 'flex';
         loadPokemon.innerHTML = `
             <div id="loadingSpinner" class="spinner-border" role="status">
@@ -68,13 +68,13 @@ async function showMorePokemon() {
     }
 
     try {
-        if (currentOffset < 72){
+        if (currentOffset < 72) {
             await loadData();
         } else {
             if (loadMoreBtn) loadMoreBtn.style.display = 'none';
         }
     } finally {
-        
+
         const spinner = document.getElementById('loadingSpinner');
         if (spinner) spinner.remove();
         loadPokemon.style.display = 'none';
@@ -127,7 +127,7 @@ function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
                 <div class="card-header">${name}</div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
-                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
+                        <p><img src="${image}" alt="${altImage}" class=""></img></p>
                         <div><p>${typesHtml}</p></div>
                     </blockquote>
                 </div>
@@ -154,33 +154,77 @@ function toggleOverlay() {
 function openOverlay(index) {
     const overlay = document.getElementById('detailsContainer');
     const pokemon = pokemonCollection[index];
-    const leftContainer = document.getElementById('leftContainer');
 
     const name = capitalizeFirstLetter(pokemon.name);
     const image = pokemon.sprites.other['official-artwork'].front_default;
-    const altImage = name;
     const types = pokemon.types.map(t => t.type.name);
     const typesHtml = types.map(type => `<span class="type-badge type-${type}">${type}</span>`).join(' ');
+    const primaryType = types[0];
 
-    leftContainer.style.width = '80%';
+    const id = pokemon.id;
+    const uid = `p${id}`;
+    const aboutId = `about-${uid}`;
+    const breedingId = `breeding-${uid}`;
+    const statsId = `stats-${uid}`;
+    const evolutionId = `evolution-${uid}`;
+
     overlay.style.display = 'flex';
+    document.body.classList.add('no-scroll');
+
     overlay.innerHTML = `
-       <div class="overlayCard">
-            <div><button class="buttonDetails" onclick="closeOverlay()">X</button></div>
+    <div class="overlayCard">
+    
+        <div class="poke-hero type-${primaryType}">
+            <button class="buttonDetails" onclick="closeOverlay()" aria-label="Close">✕</button>
             <h2>${name}</h2>
-            <div class="card-body">
-                <p><img src="${image}" alt="${altImage}" class="pokemonImg"></p>
-                <div><p>${typesHtml}</p></div>
-                <div class= secondpartofOverlay>
-                    <div class= "heigthField type-badge"><p>Height: ${pokemon.height / 10} m</p></div>
-                    <div class= "weightField type-badge"><p>Weight: ${pokemon.weight / 10} kg</p></div>
-                </div>
-                <div><p class="type-badge abilities">Abilities: ${pokemon.abilities.map(a => a.ability.name).join(', ')}</p></div>
-                <div id="evolutionContainer" ></div>
-            </div>
+            <div class="type-badges">${typesHtml}</div>
+            <img src="${image}" alt="${name}" class="pokemonOverlayImg">
         </div>
-    `;
-    renderEvolutionChain(pokemon);
+
+        <div class="poke-sheet">
+            <ul class="nav nav-underline" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="about-tab-${uid}" data-bs-toggle="tab" href="#${aboutId}" role="tab">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="breeding-tab-${uid}" data-bs-toggle="tab" href="#${breedingId}" role="tab">Breeding</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="stats-tab-${uid}" data-bs-toggle="tab" href="#${statsId}" role="tab">Base stats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="evolution-tab-${uid}" data-bs-toggle="tab" href="#${evolutionId}" role="tab">Evolution</a>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="${aboutId}" role="tabpanel" aria-labelledby="about-tab-${uid}">
+                    <div class="kv"><div class="k">Height</div><div class="v">${(pokemon.height / 10).toFixed(1)} m</div></div>
+                    <div class="kv"><div class="k">Weight</div><div class="v">${(pokemon.weight / 10).toFixed(1)} kg</div></div>
+                    <div class="kv"><div class="k">Abilities</div><div class="v">${pokemon.abilities.map(a => a.ability.name).join(', ')}</div></div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="${breedingId}" role="tabpanel" aria-labelledby="breeding-tab-${uid}">
+                <div class="kv"><div class="k">Gender</div><div class="v">♂ 87.5% – ♀ 12.5%</div></div>
+                <div class="kv"><div class="k">Egg Groups</div><div class="v">Monster</div></div>
+                <div class="kv"><div class="k">Egg Cycle</div><div class="v">Grass</div></div>
+            </div>
+
+            <div class="tab-pane fade" id="${statsId}" role="tabpanel" aria-labelledby="stats-tab-${uid}">
+                <p>Basiswerte…</p>
+            </div>
+
+            <div class="tab-pane fade" id="${evolutionId}" role="tabpanel" aria-labelledby="evolution-tab-${uid}">
+                <div id="evolutionContainer-${uid}"></div>
+            </div>
+
+        </div>
+        
+    </div>
+  `;
+
+//     renderEvolutionChain(pokemon);
 }
 
 
@@ -188,10 +232,9 @@ function openOverlay(index) {
 
 function closeOverlay() {
     const overlay = document.getElementById('detailsContainer');
-    const leftContainer = document.getElementById('leftContainer');
     overlay.style.display = 'none';
     overlay.innerHTML = '';
-    leftContainer.style.width = '';
+    document.body.classList.remove('no-scroll');
 }
 
 function openOverlayByName(name) {
@@ -257,9 +300,9 @@ function capitalizeFirstLetter(str) {
 
 function renderEvolutonChain(pokemonCollection) {
     const evolutionContainer = document.getElementById('evolutionContainer');
-    let evolutionofPokemon = 
+    let evolutionofPokemon =
 
-    evolutionContainer.innerHTML += `
+        evolutionContainer.innerHTML += `
         <div>
             <p>Evolutions</p>
             <div></div>
@@ -267,5 +310,5 @@ function renderEvolutonChain(pokemonCollection) {
     
     `;
 
-    
+
 }

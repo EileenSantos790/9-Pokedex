@@ -7,7 +7,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #BDD4DC;
+    background-color: #e13a3d;
     padding: 10px 30px;
     padding-block: 20px;
     color: white;
@@ -33,7 +33,7 @@ body {
 
 footer {
     display: flex;
-    background-color: #BDD4DC;
+    background-color: #e13a3d;
     padding: 20px;
     text-align: center;
     color: white;
@@ -63,7 +63,6 @@ input.form-control {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    /* Für kleine Bildschirme hilfreich */
 }
 
 .logo-title {
@@ -75,18 +74,25 @@ input.form-control {
 
 }
 
-.search-form {
+.searchField {
     display: flex;
     gap: 10px;
 }
 
 .card {
+    background-color: rgb(220, 220, 220) !important;
     border: none !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
-    margin: 10px !important;
-    width: 300px !important;
+    width: 200px !important;
+    align-items: center !important;
+}
+
+.card-body {
+    display: flex;
+    border: none !important;
     align-items: center;
-    padding-block: 20px;
+    flex-direction: row;
+    padding: 0 !important;
 }
 
 .card:hover {
@@ -104,21 +110,22 @@ input.form-control {
     padding: 20px;
 }
 
-@media (max-width: 768px) {
-    .card {
-        width: 100% !important;
-    }
-}
-
 .card-header {
     background-color: #4A90E2 !important;
     color: white !important;
     font-weight: bold !important;
-    font-size: 1.2rem !important;
+    font-size: 18px !important;
     text-transform: capitalize !important;
     text-align: center !important;
-    padding: 10px !important;
+    margin-top: 20px !important;
     border-radius: 20px !important;
+}
+
+.blockquote {
+    display: flex !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    justify-content: center !important;
 }
 
 .blockquote-footer {
@@ -175,7 +182,6 @@ input.form-control {
 
 .type-electric {
     background-color: #F7D02C;
-    color: black;
 }
 
 .type-grass {
@@ -184,7 +190,6 @@ input.form-control {
 
 .type-ice {
     background-color: #96D9D6;
-    color: black;
 }
 
 .type-fighting {
@@ -197,7 +202,6 @@ input.form-control {
 
 .type-ground {
     background-color: #E2BF65;
-    color: black;
 }
 
 .type-flying {
@@ -230,7 +234,6 @@ input.form-control {
 
 .type-steel {
     background-color: #B7B7CE;
-    color: black;
 }
 
 .type-fairy {
@@ -253,10 +256,6 @@ input.form-control {
     flex-direction: row;
 }
 
-.leftConteiner{
-    width: auto;
-}
-
 .rightContainer {
     padding-right: 20px;
     padding-block: 20px;
@@ -270,29 +269,117 @@ input.form-control {
     font-size: 16px;
 }
 
-.overlayCard{
-    position:fixed;
+#detailsContainer {
+    position: fixed;
+    inset: 0;
+    display: none;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.containerPosition{
+    display:flex;
+    justify-content: center;
+}
+
+.overlayCard {
+    width: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0;
+    height: auto; 
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.poke-hero {
+    position: relative;
+    min-height: 260px;
+    padding: 22px 22px 80px;
+    color: #fff;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    right: 40px;
-    max-width: 200px;
+    flex-direction: column;
+    gap: 10px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.type-badges {
+    display: flex;
+    gap: 5px;
+}
+
+.type-badge {
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25);
+    color: #fff;
+    text-transform: capitalize;
+}
+
+.pokemonOverlayImg {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -40px;
+    width: 210px;
+    filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.633));
+}
+
+.poke-sheet {
+    background-color: white;
+    padding: 56px 22px 22px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.nav-underline .nav-link {
+    color: black;
+}
+
+.nav-underline .nav-link.active {
+    border-bottom: 2px solid;
+}
+
+.kv {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 8px 18px;
+    margin: 6px 0;
+}
+
+.kv .k {
+    color: black;
 }
 
 .buttonDetails {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 50px;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    padding: 10px;
-    margin-block: 20px;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .25);
+    color: #fff;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+}
 
+.buttonDetails:hover {
+    background: rgba(255, 255, 255, .35);
+}
+
+body.no-scroll {
+    overflow: hidden;
 }
 
 .heigthField {
@@ -303,7 +390,7 @@ input.form-control {
     background-color: grey
 }
 
-.secondpartofOverlay {
+.secondpartof {
     flex-direction: row;
     justify-content: space-between;
     height: fit-content;
@@ -314,8 +401,19 @@ input.form-control {
     text-align: center;
 }
 
-.loadMoreContainer{
+.loadMoreContainer {
     display: none;
     align-items: center;
     justify-content: center;
+}
+
+@media (max-width: 450px) {
+
+    .kv{
+        grid-template-columns: 110px 1fr;
+    }
+
+    .poke-sheet{
+        padding: 56px 18px 18px;
+    }
 }
