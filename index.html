@@ -19,34 +19,32 @@
 </head>
 
 <body onload="init()">
-    <div>
-        <header>
-            <div class="header-container">
-                <a href="./index.html" class="logo-title">
-                    <img src="./assets/img/pokemon-1536849_640.png" width="30px" height="30px">
-                    <h1>Pokedex</h1>
-                </a>
-            </div>
-            <div class="searchField">
-                <input id="searchTypeField" class="form-control" type="search" placeholder="suche z.B. fire, water..."
-                    aria-label="Search">
-                <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
-            </div>
-        </header>
-    </div>
-    <div class="mainContainer">
-        <main class="leftContainer" id="leftContainer">
+    <header>
+        <div class="header-container">
+            <a href="./index.html" class="logo-title">
+                <img src="./assets/img/pokemon-1536849_640.png" width="30px" height="30px">
+                <h1>Pokedex</h1>
+            </a>
+        </div>
+        <div class="searchField">
+            <input id="searchTypeField" class="form-control" type="search" placeholder="suche z.B. fire, water..."
+                aria-label="Search">
+            <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
+        </div>
+    </header>
+    <main class="mainContainer">
+        <div class="leftContainer" id="leftContainer">
             <div id="pokedex" class="cardContainer"></div>
             <div id="profileConteiner" class="overlay"></div>
             <div>
                 <div class="loadMoreContainer" id="loadingSpinner"></div>
                 <button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button>
             </div>
-        </main>
+        </div>
         <div>
             <div class="containerPosition" id="detailsContainer"></div>
         </div>
-    </div>
+    </main>
     <footer>
         <a href="./impressum.html"></a>
     </footer>
