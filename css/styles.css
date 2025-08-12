@@ -333,6 +333,7 @@ input.form-control {
 
 .poke-sheet {
     background-color: white;
+    height: auto;
     padding: 56px 22px 22px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -415,5 +416,16 @@ body.no-scroll {
 
     .poke-sheet{
         padding: 56px 18px 18px;
+    }
+
+    .nav{
+        display: block !important;
+        --bs-nav-link-padding-y: 0rem !important;
+        text-align: center;
+    }
+
+    .nav-underline {
+        display: flex;
+        border-bottom: 1px solid ;
     }
 }
