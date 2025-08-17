@@ -1,5 +1,4 @@
 html, body {
-    max-width: 1400px;
     height: 100%;
     margin: 0;
 }
@@ -29,7 +28,6 @@ header h1 {
 body {
     display: flex;
     background-color: #c1c2c2;
-    height: 800px;
     flex-direction: column;
 }
 
