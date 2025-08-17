@@ -1,0 +1,27 @@
+.type-normal {
+    background-color: #A8A77A;
+}
+
+.type-fire {
+    background-color: #EE8130;
+}
+
+.type-water {
+    background-color: #6390F0;
+}
+
+.type-grass {
+    background-color: #7AC74C;
+}
+
+.type-poison {
+    background-color: #A33EA1;
+}
+
+.type-flying {
+    background-color: #A98FF3;
+}
+
+.type-bug {
+    background-color: #A6B91A;
+}

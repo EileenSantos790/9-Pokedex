@@ -1,314 +1,296 @@
-const Limit = 18;
+let pokemonCollection = [];
+let limit = 5;
 let currentOffset = 0;
 let tripletStartIndex = 0;
-const pokemonCollection = [];
 let isLoading = false;
 
-
 function init() {
-    loadData();
+  loadData();
 }
 
 function getApiUrl() {
-    return 'https://pokeapi.co/api/v2/pokemon?limit=' + Limit + '&offset=' + currentOffset;
-    //https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0
+  return 'https://pokeapi.co/api/v2/pokemon?limit=' + limit + '&offset=' + currentOffset;
 }
 
 async function loadData(isSearch = false, filteredData = null) {
+  let pokemonList = [];
 
-    await sleep(150);
-
-    let pokemonList = [];
-    let pokemonFilteres = [];
-
-    if (!isSearch && !filteredData) {
-        let response = await fetch(getApiUrl());
-        let data = await response.json();
-        pokemonList = data.results;
-    } else {
-        pokemonList = filteredData;
-    }
-
-    for (let [index, pokemon] of pokemonList.entries()) {
-        index++
-        let detailsResponse = await fetch(pokemon.url);
-        let pokemonDetails = await detailsResponse.json();
-
-        pokemonCollection.push(pokemonDetails);
-
-        if (index % 3 === 0 && !filteredData) {
-            const pokemonNoEvolutionIndex = pokemonCollection.length - 3;
-            renderPokemon(pokemonCollection, pokemonNoEvolutionIndex);
-        } else if (filteredData) {
-            pokemonFilteres.push(pokemonDetails);
-            renderPokemon(pokemonFilteres, null);
-        }
-    }
+  if (!isSearch) {
+    pokemonList = await loadPage();
+    getPokemonCollection(pokemonList, isSearch);
+  } else {
+    getPokemonCollection(filteredData, isSearch)
+  }
+  hideSpinner();
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+function showSpinner() {
+  const spinner = document.getElementById('loadingSpinner');
+  spinner.style.display = 'flex';
+}
+
+function hideSpinner() {
+  const spinner = document.getElementById('loadingSpinner');
+  spinner.style.display = 'none';
+}
+
+async function loadPage(searchParam) {
+  let response;
+  if (!searchParam) {
+     response = await fetch(getApiUrl());
+  }else {
+    response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=' + searchParam);
+  }
+    const data = await response.json();
+    return data.results;
+}
+
+async function getPokemonCollection(pokemonList, isSearch) {
+  if (isSearch) {
+    pokemonCollection = [];
+  }
+  for (let [index, pokemon] of pokemonList.entries()) {
+    index++
+    const detailsResponse = await fetch(pokemon.url);
+    const pokemonDetails = await detailsResponse.json();
+    pokemonCollection.push(pokemonDetails);
+  }
+  renderPokemon(pokemonCollection);
 }
 
 async function showMorePokemon() {
-    if (isLoading) return;
-    isLoading = true;
-    currentOffset = currentOffset + Limit;
-    const loadPokemon = document.getElementById('loadMoreContainer');
-    const loadMoreBtn = document.getElementById('loadMoreButton');
-    if (loadMoreBtn) loadMoreBtn.disabled = true;
+  showSpinner();
+  disableBtnLoadMore();
+  currentOffset += limit;
 
-    if (!document.getElementById('loadingSpinner')) {
-        loadPokemon.style.display = 'flex';
-        loadPokemon.innerHTML = `
-            <div id="loadingSpinner" class="spinner-border" role="status">
-                <span class="sr-only"></span>
-            </div>
-        `;
-    }
-
-    try {
-        if (currentOffset < 72) {
-            await loadData();
-        } else {
-            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-        }
-    } finally {
-
-        const spinner = document.getElementById('loadingSpinner');
-        if (spinner) spinner.remove();
-        loadPokemon.style.display = 'none';
-
-        if (loadMoreBtn) loadMoreBtn.disabled = false;
-        isLoading = false;
-    }
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  await loadData();
+  
+  if (currentOffset == 15) {
+    hideBtnLoadMore()
+  }
+  hideSpinner();
+  enableBtnLoadMore()
 }
 
-function renderPokemon(pokemonCollection, pokemonNoEvolutionIndex) {
-    const container = document.getElementById('pokedex');
-    const pokemon = pokemonCollection[pokemonNoEvolutionIndex] || pokemonCollection;
-
-    if (pokemonNoEvolutionIndex !== null) { // Carregamento inicial
-        const name = pokemonCollection[pokemonNoEvolutionIndex].name;
-        const image = pokemonCollection[pokemonNoEvolutionIndex].sprites.other['official-artwork'].front_default;
-        const altImage = pokemonCollection[pokemonNoEvolutionIndex].name;
-        const types = pokemonCollection[pokemonNoEvolutionIndex].types.map(t => t.type.name);
-        const typesHtml = types
-            .map(type => `<span class="type-badge type-${type}">${type}</span>`)
-            .join(' ');
-
-        container.innerHTML += `
-            <div class="card" onclick="openOverlay(${pokemonNoEvolutionIndex})" id="${name}">
-                <div class="card-header">${name}</div>
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></img></p>
-                        <div><p>${typesHtml}</p></div>
-                    </blockquote>
-                </div>
-            </div>
-        `;
-    } else { // Busca por tipo
-        container.innerHTML = ''; // limpar html
-        for (const pokemon of pokemonCollection) {
-            console.log(pokemon.name);
-            const name = pokemon.name;
-            const image = pokemon.sprites.other['official-artwork'].front_default;
-            const altImage = pokemon.name;
-            const types = pokemon.types.map(t => t.type.name);
-            const typesString = types.join(', ');
-            const typesHtml = types
-                .map(type => `<span class="type-badge type-${type}">${type}</span>`)
-                .join(' ');
-
-
-            container.innerHTML += `
-            <div class="card" class="cardDetails" onclick="openOverlayByName('${name}')">
-                <div class="card-header">${name}</div>
-                <div class="card-body">
-                    <blockquote class="blockquote mb-0">
-                        <p><img src="${image}" alt="${altImage}" class=""></img></p>
-                        <div><p>${typesHtml}</p></div>
-                    </blockquote>
-                </div>
-            </div>
-        `;
-        }
-    }
+function hideBtnLoadMore() {
+  const btnLoadMore = document.getElementById('loadMoreButton');
+  btnLoadMore.style.display = 'none';
 }
 
+function disableBtnLoadMore() {
+  const btnLoadMore = document.getElementById('loadMoreButton');
+  btnLoadMore.disabled = true;
+}
 
-
-
-
+function enableBtnLoadMore() {
+  const btnLoadMore = document.getElementById('loadMoreButton');
+  btnLoadMore.disabled = false;
+}
 
 function toggleOverlay() {
-    const overlay = document.getElementById('detailsContainer');
-    if (overlay.style.display === 'flex') {
-        closeOverlay();
-    } else {
-        openOverlay();
-    }
+  const overlay = document.getElementById('detailsContainer');
+  if (overlay.style.display === 'flex') {
+    closeOverlay();
+  } else {
+    openOverlay();
+  }
 }
-
-function openOverlay(index) {
-    const overlay = document.getElementById('detailsContainer');
-    const pokemon = pokemonCollection[index];
-
-    const name = capitalizeFirstLetter(pokemon.name);
-    const image = pokemon.sprites.other['official-artwork'].front_default;
-    const types = pokemon.types.map(t => t.type.name);
-    const typesHtml = types.map(type => `<span class="type-badge type-${type}">${type}</span>`).join(' ');
-    const primaryType = types[0];
-
-    const id = pokemon.id;
-    const uid = `p${id}`;
-    const aboutId = `about-${uid}`;
-    const breedingId = `breeding-${uid}`;
-    const statsId = `stats-${uid}`;
-    const evolutionId = `evolution-${uid}`;
-
-    overlay.style.display = 'flex';
-    document.body.classList.add('no-scroll');
-
-    overlay.innerHTML = `
-    <div class="overlayCard">
-    
-        <div class="poke-hero type-${primaryType}">
-            <button class="buttonDetails" onclick="closeOverlay()" aria-label="Close">✕</button>
-            <h2>${name}</h2>
-            <div class="type-badges">${typesHtml}</div>
-            <img src="${image}" alt="${name}" class="pokemonOverlayImg">
-        </div>
-
-        <div class="poke-sheet">
-            <ul class="nav nav-underline" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="about-tab-${uid}" data-bs-toggle="tab" href="#${aboutId}" role="tab">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="breeding-tab-${uid}" data-bs-toggle="tab" href="#${breedingId}" role="tab">Breeding</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="stats-tab-${uid}" data-bs-toggle="tab" href="#${statsId}" role="tab">Base stats</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="evolution-tab-${uid}" data-bs-toggle="tab" href="#${evolutionId}" role="tab">Evolution</a>
-                </li>
-            </ul>
-
-            <div class="tab-content mt-3">
-                <div class="tab-pane fade show active" id="${aboutId}" role="tabpanel" aria-labelledby="about-tab-${uid}">
-                    <div class="kv"><div class="k">Height</div><div class="v">${(pokemon.height / 10).toFixed(1)} m</div></div>
-                    <div class="kv"><div class="k">Weight</div><div class="v">${(pokemon.weight / 10).toFixed(1)} kg</div></div>
-                    <div class="kv"><div class="k">Abilities</div><div class="v">${pokemon.abilities.map(a => a.ability.name).join(', ')}</div></div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="${breedingId}" role="tabpanel" aria-labelledby="breeding-tab-${uid}">
-                <div class="kv"><div class="k">Gender</div><div class="v">♂ 87.5% – ♀ 12.5%</div></div>
-                <div class="kv"><div class="k">Egg Groups</div><div class="v">Monster</div></div>
-                <div class="kv"><div class="k">Egg Cycle</div><div class="v">Grass</div></div>
-            </div>
-
-            <div class="tab-pane fade" id="${statsId}" role="tabpanel" aria-labelledby="stats-tab-${uid}">
-                <p>Basiswerte…</p>
-            </div>
-
-            <div class="tab-pane fade" id="${evolutionId}" role="tabpanel" aria-labelledby="evolution-tab-${uid}">
-                <div id="evolutionContainer-${uid}"></div>
-            </div>
-
-        </div>
-        
-    </div>
-  `;
-
-//     renderEvolutionChain(pokemon);
-}
-
-
-
 
 function closeOverlay() {
-    const overlay = document.getElementById('detailsContainer');
-    overlay.style.display = 'none';
-    overlay.innerHTML = '';
-    document.body.classList.remove('no-scroll');
+  const overlay = document.getElementById('detailsContainer');
+  overlay.style.display = 'none';
+  overlay.innerHTML = '';
+  document.body.classList.remove('no-scroll');
 }
 
 function openOverlayByName(name) {
-    const index = pokemonCollection.findIndex(p => p.name === name);
-    if (index !== -1) {
-        openOverlay(index);
-    }
+  const index = pokemonCollection.findIndex(p => p.name === name);
+  if (index !== -1) {
+    openOverlay(index);
+  }
 }
 
 async function searchByType() {
-    const inputField = document.getElementById('searchTypeField').value;
-    const input = inputField.toLowerCase().trim();
-    const container = document.getElementById('pokedex');
-    container.innerHTML = '';
+  const inputField = document.getElementById('searchTypeField').value;
+  const input = inputField.toLowerCase().trim();
+  const container = document.getElementById('pokedex');
+  const results = await loadPage(20)
+  container.innerHTML = '';
+  hideBtnLoadMore();
 
-    const response = await fetch("https://pokeapi.co/api/v2/type/" + input);
-    const data = await response.json();
-    const pokemonList = [];
-
-    if (!input) {
-        init();
-        return;
-    }
-
-    for (let p of data.pokemon) {
-        pokemonList.push(p.pokemon);
-    }
-
-    loadData(true, pokemonList);
+  if (!input || input.length <= 2) { container.innerHTML = '<p>Pokemon not found! Please digit more than 2 letters.</p>'; return; }
+  loadData(true, await getPokemonDetails(results, input));
 }
 
-function renderPokemonDetails(pokemon) {
-    const detailsContainer = document.getElementById('detailsContainer');
-    detailsContainer.innerHTML = '';
-
-    const image = pokemon.sprites.other['official-artwork'].front_default;
-    const altImage = pokemon.name;
-    const types = pokemon.types.map(t => t.type.name);
-    const typesHtml = types
-        .map(type => `<span class="type-badge type-${type}">${type}</span>`)
-        .join(' ');
-
-    detailsContainer.innerHTML += `
-        <div class="card">
-            <div class="card-header">${name}</div>
-            <div class="card-body">
-                <blockquote class="blockquote
-                mb-0">
-                        <p><img src="${image}" alt="${altImage}" class="pokemonImg"></p>
-                        <div><p>${typesHtml}</p></div>
-                </blockquote>
-            </div>
-        </div>
-    `;
+async function getPokemonDetails(results, input) {
+  const pokemonList = [];
+  for (let p of results) {
+    let detailsResponse = await fetch(p.url);
+    let pokemonDetails = await detailsResponse.json();
+    if (pokemonDetails.types.some(t => t.type.name.startsWith(input))) {
+      pokemonList.push(p);
+    }
+  }
+  return pokemonList;
 }
 
 function capitalizeFirstLetter(str) {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+async function openOverlay(index) {
+  const overlay = document.getElementById('detailsContainer');
+  const pokemon = pokemonCollection[index];
+  const species = await getFetchPokemonSpecies(pokemon);
 
+  overlay.dataset.currentIndex = index;
+  overlay.style.display = 'flex';
+  document.body.classList.add('no-scroll');
+  overlay.innerHTML = renderOverlay(pokemon, index, species);
+  renderEvolutionChain(species, index);
+}
 
-function renderEvolutonChain(pokemonCollection) {
-    const evolutionContainer = document.getElementById('evolutionContainer');
-    let evolutionofPokemon =
+function renderPokeSheet(pokemon, index, species) {
+  return `
+        <div class="poke-sheet">
+            ${getTabListPokeSheet(index)}
+            ${getTabContent(pokemon, index, species)}
+        `
+}
 
-        evolutionContainer.innerHTML += `
-        <div>
-            <p>Evolutions</p>
-            <div></div>
-        </div>
-    
-    `;
+async function getFetchPokemonSpecies(pokemon) {
+  const speciesRes = await fetch(pokemon.species.url);
+  return await speciesRes.json();
+}
 
+function renderPokemonDetails(pokemon) {
+  const detailsContainer = document.getElementById('detailsContainer');
+  detailsContainer.innerHTML = '';
+  detailsContainer.innerHTML += getCardTemplate(pokemon);
+}
 
+function renderStats(stats) {
+  let html = '';
+  for (const s of stats) {
+    const label = statLabel(s.stat.name);
+    const val = s.base_stat;
+    const color = bsProgressColor(s.stat.name);
+    const pct = (val * 100) / 100;
+
+    html += getStatsTemplate(label, color, pct, val);
+  }
+  return html;
+}
+
+async function renderEvolutionChain(species, index) {
+  const containerId = `evolutionContainer-${index}`;
+  const container = document.getElementById(containerId);
+  const response = await fetch(species.evolution_chain.url);
+  const evolutions = await response.json();
+  const allEvolutions = getEvolutions(evolutions.chain);
+  const evoImages = await getEvoImages(allEvolutions);
+  container.innerHTML = getEvolutionTemplate(evoImages);
+}
+
+async function getEvoImages(allEvolutions) {
+  return await Promise.all(
+    allEvolutions.map(async evo => {
+      try {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${evo.name}`);
+        const data = await res.json();
+        return {
+          name: evo.name,
+          img: data.sprites.other['official-artwork'].front_default || data.sprites.front_default || '',
+        };
+      } catch { return { name: evo.name, img: '' }; }
+    })
+  );
+}
+
+function getEvolutions(chain) {
+  let evolutions = [{ name: chain.species.name, url: chain.species.url }];
+  for (let evo of chain.evolves_to) {
+    evolutions = evolutions.concat(getEvolutions(evo));
+  }
+  return evolutions;
+}
+
+function renderPokemon(pokemonCollection) {
+  const container = document.getElementById('pokedex');
+  container.innerHTML = "";
+  for (const pokemon of pokemonCollection) {
+    container.innerHTML += getStartTemplate(pokemon);
+  }
+}
+
+function getPokemonTypes(pokemon) {
+  const types = pokemon.types.map(t => t.type.name);
+  return types.map(type => `<span class="type-badge type-${type}">${type}</span>`).join(' ');
+}
+
+function getPokemonTypeKeys(pokemon) {
+  return pokemon.types.map(t => t.type.name);
+}
+
+function getPokemonImages(pokemon) {
+  return pokemon.sprites.other['official-artwork'].front_default;
+}
+
+function formatGender(genderRate) {
+  if (genderRate === -1) return 'Geschlechtslos';
+  const female = Math.round((genderRate / 8) * 1000) / 10;
+  const male = Math.round((100 - female) * 10) / 10;
+  return `♂ ${male}% – ♀ ${female}%`;
+}
+
+function formatEggGroups(groups) {
+  if (!groups || !groups.length) return '—';
+  return groups.map(g => capitalizeFirstLetter(g.name)).join(', ');
+}
+
+function formatEggCycle(hatchCounter) {
+  if (hatchCounter == null) return '—';
+  const cycles = hatchCounter;
+  const steps = (hatchCounter + 1) * 255;
+  return `${cycles} Zyklen (~${steps.toLocaleString()} Schritte)`;
+}
+
+function statLabel(key) {
+  const map = {
+    hp: 'HP', attack: 'Attack', defense: 'Defense',
+    'special-attack': 'Sp. Atk', 'special-defense': 'Sp. Def', speed: 'Speed'
+  };
+  return map[key] || key;
+}
+
+function bsProgressColor(statKey) {
+  switch (statKey) {
+    case 'hp': return 'bg-danger';
+    case 'attack': return 'bg-warning';
+    case 'defense': return 'bg-success';
+    case 'special-attack': return 'bg-info';
+    case 'special-defense': return 'bg-primary';
+    case 'speed': return 'bg-secondary';
+    default: return 'bg-dark';
+  }
+}
+
+function moveBack() {
+  const overlay = document.getElementById('detailsContainer');
+  let currentIndex = parseInt(overlay.dataset.currentIndex, 10);
+  if (isNaN(currentIndex)) return;
+
+  currentIndex = (currentIndex - 1 + pokemonCollection.length) % pokemonCollection.length;
+  openOverlay(currentIndex);
+}
+
+function moveForward() {
+  const overlay = document.getElementById('detailsContainer');
+  let currentIndex = parseInt(overlay.dataset.currentIndex, 10);
+  if (isNaN(currentIndex)) return;
+
+  currentIndex = (currentIndex + 1) % pokemonCollection.length;
+  openOverlay(currentIndex);
 }

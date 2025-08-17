@@ -1,0 +1,42 @@
+@media (max-width: 450px) {
+
+    header{
+        gap: 15px;
+    }
+
+    .kv{
+        grid-template-columns: 110px 1fr;
+    }
+
+    .poke-sheet{
+        padding: 56x 18px 18px;
+    }
+
+    .nav{
+        display: block !important;
+        --bs-nav-link-padding-y: 0rem !important;
+        text-align: center;
+    }
+
+    .nav-underline {
+        display: flex;
+        border-bottom: 1px solid ;
+    }
+
+    .evo-card img{
+        height: 60px;
+        width: 60px;
+    }
+
+    .evo-name {
+        font-size: 12px;
+    }
+
+    .evo-card {
+        width: auto;
+    }
+
+    .evo-row{
+        flex-direction: column;
+    }
+}

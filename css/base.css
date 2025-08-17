@@ -1,0 +1,51 @@
+html, body {
+    max-width: 1400px;
+    height: 100%;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e13a3d;
+    padding: 10px 30px;
+    padding-block: 20px;
+    color: white;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+header a {
+    text-decoration: none;
+    color: black;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+body {
+    display: flex;
+    background-color: #c1c2c2;
+    height: 800px;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+footer {
+    background-color: #e13a3d;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.no-scroll {
+    overflow: hidden;
+}

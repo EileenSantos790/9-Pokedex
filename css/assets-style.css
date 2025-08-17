@@ -6,3 +6,32 @@
     justify-content: center;
     align-items: center;
 }
+
+.pokemonOverlayImg {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -40px;
+    width: 210px;
+    filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.633));
+}
+
+.spinner {
+    position: fixed;
+    bottom: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.evo-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .15));
+}
+
+.evo-arrow {
+    font-size: 20px;
+    opacity: 0.7;
+    user-select: none;
+}
