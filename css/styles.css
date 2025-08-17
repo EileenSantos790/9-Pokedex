@@ -130,12 +130,6 @@ input.form-control {
     cursor: pointer;
 }
 
-.mainContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
 .cardDetails {
     width: 100%;
     display: flex;

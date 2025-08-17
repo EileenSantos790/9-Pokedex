@@ -1,5 +1,5 @@
 let pokemonCollection = [];
-let limit = 5;
+let limit = 20;
 let currentOffset = 0;
 let tripletStartIndex = 0;
 let isLoading = false;
@@ -66,7 +66,7 @@ async function showMorePokemon() {
   await new Promise(resolve => setTimeout(resolve, 1000));
   await loadData();
   
-  if (currentOffset == 15) {
+  if (currentOffset == 80) {
     hideBtnLoadMore()
   }
   hideSpinner();
@@ -111,16 +111,17 @@ function openOverlayByName(name) {
   }
 }
 
-async function searchByType() {
-  const inputField = document.getElementById('searchTypeField').value;
+async function search() {
+  const inputField = document.getElementById('search').value;
   const input = inputField.toLowerCase().trim();
   const container = document.getElementById('pokedex');
-  const results = await loadPage(20)
+  const results = await loadPage(100)
   container.innerHTML = '';
   hideBtnLoadMore();
 
-  if (!input || input.length <= 2) { container.innerHTML = '<p>Pokemon not found! Please digit more than 2 letters.</p>'; return; }
+  if (!input || input.length <= 2) { alert('Enter more than 2 letters'); loadData(); return; }
   loadData(true, await getPokemonDetails(results, input));
+  loadData(true, await getPokemonName(results, input));
 }
 
 async function getPokemonDetails(results, input) {
@@ -129,6 +130,9 @@ async function getPokemonDetails(results, input) {
     let detailsResponse = await fetch(p.url);
     let pokemonDetails = await detailsResponse.json();
     if (pokemonDetails.types.some(t => t.type.name.startsWith(input))) {
+      pokemonList.push(p);
+    }
+    if (pokemonDetails.name.startsWith(input)) {
       pokemonList.push(p);
     }
   }

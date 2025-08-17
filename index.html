@@ -33,14 +33,14 @@
                     </a>
                 </div>
                 <div class="searchField">
-                    <input id="searchTypeField" class="form-control" type="search" placeholder="Search by type"
+                    <input id="search" class="form-control" type="search" placeholder="type or name"
                         aria-label="Search">
-                    <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
+                    <button onclick="search()" class="btn btn-outline-success" type="submit">Suchen</button>
                 </div>
             </header>
 
-            <main class="mainContainer" class="widthLimitation">
-                <div>
+            <main>
+                <div class="widthLimitation">
                     <div id="pokedex" class="cardContainer"></div>
                     <div id="profileConteiner" class="overlay"></div>
                     <div id="loadMoreContainer" class="loadMoreCenter">
@@ -50,7 +50,7 @@
                         <button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button>
                     </div>
                 </div>
-                <div>
+                <div class="widthLimitation">
                     <div class="containerPosition" id="detailsContainer"></div>
                 </div>
             </main>
