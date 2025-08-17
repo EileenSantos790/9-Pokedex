@@ -66,7 +66,7 @@ async function showMorePokemon() {
   await new Promise(resolve => setTimeout(resolve, 1000));
   await loadData();
   
-  if (currentOffset == 80) {
+  if (currentOffset == 1282) {
     hideBtnLoadMore()
   }
   hideSpinner();
@@ -112,16 +112,17 @@ function openOverlayByName(name) {
 }
 
 async function search() {
+  showSpinner();
   const inputField = document.getElementById('search').value;
   const input = inputField.toLowerCase().trim();
   const container = document.getElementById('pokedex');
-  const results = await loadPage(100)
-  container.innerHTML = '';
-  hideBtnLoadMore();
-
-  if (!input || input.length <= 2) { alert('Enter more than 2 letters'); loadData(); return; }
+  const results = await loadPage(1302)
+  
+  if (!input || input.length <= 2) { alert('Enter more than 2 letters'); hideSpinner(); return; }
   loadData(true, await getPokemonDetails(results, input));
-  loadData(true, await getPokemonName(results, input));
+  container.innerHTML = '';
+  hideSpinner();
+  hideBtnLoadMore();
 }
 
 async function getPokemonDetails(results, input) {
