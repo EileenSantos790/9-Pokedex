@@ -24,41 +24,39 @@
     </head>
 
     <body onload="init()">
-        
-        <header>
-            <div class="header-container">
-                <a href="./index.html" class="logo-title">
-                    <img src="./assets/img/pokemon-1536849_640.png" width="30px" height="30px">
-                    <h1>Pokedex</h1>
-                </a>
-            </div>
-            <div class="searchField">
-                <input id="searchTypeField" class="form-control" type="search" placeholder="Search by type"
-                    aria-label="Search">
-                <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
-            </div>
-        </header>
-
-        <main class="mainContainer">
-            <div class="contentCenter">
-                <div id="pokedex" class="cardContainer"></div>
-                <div id="profileConteiner" class="overlay"></div>
-                <div id="loadMoreContainer" class="loadMoreCenter">
-                    <div id="loadingSpinner" class="spinner-border spinner" role="status">
-                        <span class="sr-only"></span>
-                    </div>
-                    <button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button>
+        <div class="page">
+            <header class="widthLimitation">
+                <div class="header-container">
+                    <a href="./index.html" class="logo-title">
+                        <img src="./assets/img/pokemon-1536849_640.png" width="30px" height="30px">
+                        <h1>Pokedex</h1>
+                    </a>
                 </div>
-            </div>
-            <div>
-                <div class="containerPosition" id="detailsContainer"></div>
-            </div>
-        </main>
+                <div class="searchField">
+                    <input id="searchTypeField" class="form-control" type="search" placeholder="Search by type"
+                        aria-label="Search">
+                    <button onclick="searchByType()" class="btn btn-outline-success" type="submit">Suchen</button>
+                </div>
+            </header>
 
-        <footer>
-            <a href="./impressum.html"></a>
-        </footer>
+            <main class="mainContainer" class="widthLimitation">
+                <div>
+                    <div id="pokedex" class="cardContainer"></div>
+                    <div id="profileConteiner" class="overlay"></div>
+                    <div id="loadMoreContainer" class="loadMoreCenter">
+                        <div id="loadingSpinner" class="spinner-border spinner" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                        <button class="loadMoreButton" id="loadMoreButton" onclick="showMorePokemon()">Weitere anzeigen</button>
+                    </div>
+                </div>
+                <div>
+                    <div class="containerPosition" id="detailsContainer"></div>
+                </div>
+            </main>
 
+            <footer class="widthLimitation"></footer>
+        </div>
     </body>
 
 </html>

@@ -319,6 +319,15 @@ div.container .fw-semibold {
     text-transform: capitalize;
 }
 
-.contentCenter {
+.page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.widthLimitation {
     max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding-inline: 20px;
 }
