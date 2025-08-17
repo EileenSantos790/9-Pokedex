@@ -9,7 +9,7 @@ let allPokemons;
 async function init() {
   showSpinner();
   hideBtnLoadMore();
-  loadData();
+  await loadData();
   allPokemons = await loadPage(1302);
   hideSpinner();
   showBtnLoadMore();
@@ -24,11 +24,10 @@ async function loadData(isSearch = false, filteredData = null) {
 
   if (!isSearch) {
     pokemonList = await loadPage();
-    getPokemonCollection(pokemonList, isSearch);
+    await getPokemonCollection(pokemonList, isSearch);
   } else {
-    getPokemonCollection(filteredData, isSearch)
+    await getPokemonCollection(filteredData, isSearch);
   }
-  hideSpinner();
 }
 
 function showSpinner() {
@@ -56,13 +55,19 @@ async function getPokemonCollection(pokemonList, isSearch) {
   if (isSearch) {
     pokemonCollection = [];
   }
-  for (let [index, pokemon] of pokemonList.entries()) {
-    index++
-    const detailsResponse = await fetch(pokemon.url);
-    const pokemonDetails = await detailsResponse.json();
-    pokemonCollection.push(pokemonDetails);
-  }
-  renderPokemon(pokemonCollection);
+
+  // Fetch all details in parallel for speed
+  const details = await Promise.all(
+    pokemonList.map(async (pokemon) => {
+      const detailsResponse = await fetch(pokemon.url);
+      return await detailsResponse.json();
+    })
+  );
+
+  pokemonCollection.push(...details);
+
+  // Wait until render (including images) is done
+  await renderPokemon(pokemonCollection);
 }
 
 async function showMorePokemon() {
@@ -127,15 +132,17 @@ async function search() {
   showSpinner();
   const input = document.getElementById('search').value.toLowerCase().trim();
   const container = document.getElementById('pokedex');
-  if (!input || input.length <= 2) {alert('Enter more than 2 letters'); hideSpinner();return;}
+  if (!input || input.length <= 2) { alert('Enter more than 2 letters'); hideSpinner(); return; }
 
   let pokemonList = allPokemons.filter(p => p.name.startsWith(input));
-  
-  if (pokemonList.length === 0) {pokemonList = await getPokemonsByType(input);}
-  loadData(true, pokemonList);
+
+  if (pokemonList.length === 0) { pokemonList = await getPokemonsByType(input); }
+
   container.innerHTML = '';
-  hideSpinner();
   hideBtnLoadMore();
+
+  await loadData(true, pokemonList);   // wait for fetch + render (incl. images)
+  hideSpinner();
 }
 
 async function getPokemonsByType(type) {
@@ -232,12 +239,20 @@ function getEvolutions(chain) {
   return evolutions;
 }
 
-function renderPokemon(pokemonCollection) {
+async function renderPokemon(pokemonCollection) {
   const container = document.getElementById('pokedex');
-  container.innerHTML = "";
-  for (const pokemon of pokemonCollection) {
-    container.innerHTML += getStartTemplate(pokemon);
-  }
+  let html = "";
+  for (const pokemon of pokemonCollection) { html += getStartTemplate(pokemon); }
+  container.innerHTML = html;
+  const imgs = Array.from(container.querySelectorAll('img'));
+  if (imgs.length === 0) return;
+  await Promise.all(imgs.map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(resolve => { img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+      });
+    })
+  );
 }
 
 function getPokemonTypes(pokemon) {
