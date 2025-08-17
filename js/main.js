@@ -1,11 +1,18 @@
+const pokemonCache = new Map();
 let pokemonCollection = [];
 let limit = 20;
 let currentOffset = 0;
 let tripletStartIndex = 0;
 let isLoading = false;
+let allPokemons;
 
-function init() {
+async function init() {
+  showSpinner();
+  hideBtnLoadMore();
   loadData();
+  allPokemons = await loadPage(1302);
+  hideSpinner();
+  showBtnLoadMore();
 }
 
 function getApiUrl() {
@@ -78,6 +85,11 @@ function hideBtnLoadMore() {
   btnLoadMore.style.display = 'none';
 }
 
+function showBtnLoadMore() {
+  const btnLoadMore = document.getElementById('loadMoreButton');
+  btnLoadMore.style.display = 'flex';
+}
+
 function disableBtnLoadMore() {
   const btnLoadMore = document.getElementById('loadMoreButton');
   btnLoadMore.disabled = true;
@@ -113,31 +125,29 @@ function openOverlayByName(name) {
 
 async function search() {
   showSpinner();
-  const inputField = document.getElementById('search').value;
-  const input = inputField.toLowerCase().trim();
+  const input = document.getElementById('search').value.toLowerCase().trim();
   const container = document.getElementById('pokedex');
-  const results = await loadPage(1302)
+  if (!input || input.length <= 2) {alert('Enter more than 2 letters'); hideSpinner();return;}
+
+  let pokemonList = allPokemons.filter(p => p.name.startsWith(input));
   
-  if (!input || input.length <= 2) { alert('Enter more than 2 letters'); hideSpinner(); return; }
-  loadData(true, await getPokemonDetails(results, input));
+  if (pokemonList.length === 0) {pokemonList = await getPokemonsByType(input);}
+  loadData(true, pokemonList);
   container.innerHTML = '';
   hideSpinner();
   hideBtnLoadMore();
 }
 
-async function getPokemonDetails(results, input) {
-  const pokemonList = [];
-  for (let p of results) {
-    let detailsResponse = await fetch(p.url);
-    let pokemonDetails = await detailsResponse.json();
-    if (pokemonDetails.types.some(t => t.type.name.startsWith(input))) {
-      pokemonList.push(p);
-    }
-    if (pokemonDetails.name.startsWith(input)) {
-      pokemonList.push(p);
-    }
+async function getPokemonsByType(type) {
+  try {
+    const res = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.pokemon.map(p => p.pokemon);
+  } catch (err) {
+    console.error(err);
+    return [];
   }
-  return pokemonList;
 }
 
 function capitalizeFirstLetter(str) {
