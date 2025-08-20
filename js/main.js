@@ -43,12 +43,12 @@ function hideSpinner() {
 async function loadPage(searchParam) {
   let response;
   if (!searchParam) {
-     response = await fetch(getApiUrl());
-  }else {
+    response = await fetch(getApiUrl());
+  } else {
     response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=' + searchParam);
   }
-    const data = await response.json();
-    return data.results;
+  const data = await response.json();
+  return data.results;
 }
 
 async function getPokemonCollection(pokemonList, isSearch) {
@@ -77,7 +77,7 @@ async function showMorePokemon() {
 
   await new Promise(resolve => setTimeout(resolve, 1000));
   await loadData();
-  
+
   if (currentOffset == 1282) {
     hideBtnLoadMore()
   }
@@ -130,19 +130,50 @@ function openOverlayByName(name) {
 
 async function search() {
   showSpinner();
-  const input = document.getElementById('search').value.toLowerCase().trim();
-  const container = document.getElementById('pokedex');
-  if (!input || input.length <= 2) { alert('Enter more than 2 letters'); hideSpinner(); return; }
+  const inputEl = document.getElementById('search');
+  const input = inputEl.value.toLowerCase().trim();
+  const invalidField = document.getElementById('invalidSearch');
+
+  if (invalidField) { invalidField.style.display = 'none'; }
 
   let pokemonList = allPokemons.filter(p => p.name.startsWith(input));
-
   if (pokemonList.length === 0) { pokemonList = await getPokemonsByType(input); }
-
-  container.innerHTML = '';
+  validation(pokemonList.length === 0, inputEl);
   hideBtnLoadMore();
-
   await loadData(true, pokemonList);   // wait for fetch + render (incl. images)
   hideSpinner();
+}
+
+function handleSearch(event) {
+  event.preventDefault();
+  const inputEl = document.getElementById('search');
+  const invalidField = document.getElementById('invalidSearch');
+  const query = inputEl.value.trim();
+  if (query.length < 3) {
+    const msg = 'Please enter 3 or more letters';
+    inputEl.setCustomValidity(msg);
+    if (typeof inputEl.reportValidity === 'function') inputEl.reportValidity();
+    if (invalidField) { invalidField.textContent = msg; invalidField.style.display = 'block'; }
+    inputEl.classList.add('is-invalid');
+    return false;
+  }
+  if (invalidField) invalidField.style.display = 'none';
+  inputEl.classList.remove('is-invalid');
+  search();
+  return false;
+}
+
+function validation(validList, inputEl) {
+  const container = document.getElementById('pokedex');
+  if (validList) {
+    inputEl.setCustomValidity('Pokemon not found');
+    if (typeof inputEl.reportValidity === 'function') inputEl.reportValidity();
+  } else {
+    inputEl.setCustomValidity('');
+    if (typeof inputEl.reportValidity === 'function') inputEl.reportValidity();
+  }
+  container.innerHTML = '';
+  document.getElementById('homeButton').classList.remove('d-none');
 }
 
 async function getPokemonsByType(type) {
@@ -247,11 +278,12 @@ async function renderPokemon(pokemonCollection) {
   const imgs = Array.from(container.querySelectorAll('img'));
   if (imgs.length === 0) return;
   await Promise.all(imgs.map(img => {
-      if (img.complete) return Promise.resolve();
-      return new Promise(resolve => { img.addEventListener('load', resolve, { once: true });
-        img.addEventListener('error', resolve, { once: true });
-      });
-    })
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      img.addEventListener('load', resolve, { once: true });
+      img.addEventListener('error', resolve, { once: true });
+    });
+  })
   );
 }
 
@@ -324,3 +356,33 @@ function moveForward() {
   currentIndex = (currentIndex + 1) % pokemonCollection.length;
   openOverlay(currentIndex);
 }
+
+//Script Bootstrap validation
+(function () {
+  'use strict';
+  window.addEventListener('load', function () {
+    var forms = document.getElementsByClassName('needs-validation');
+    Array.prototype.filter.call(forms, function (form) {
+      form.addEventListener('submit', function (event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+    // Clear the search field custom error once it becomes valid
+    var searchInput = document.getElementById('search');
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        var invalidField = document.getElementById('invalidSearch');
+        if (searchInput.value.trim().length >= 3) {
+          searchInput.setCustomValidity('');
+          if (typeof searchInput.reportValidity === 'function') searchInput.reportValidity();
+          if (invalidField) invalidField.style.display = 'none';
+          searchInput.classList.remove('is-invalid');
+        }
+      });
+    }
+  }, false);
+})();

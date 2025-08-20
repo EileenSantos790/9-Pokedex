@@ -6,7 +6,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #e13a3d;
+    background-color: #4B8FE2;
     padding: 10px 30px;
     padding-block: 20px;
     color: white;
@@ -33,7 +33,7 @@ main {
 }
 
 footer {
-    background-color: #e13a3d;
+    background-color: #4B8FE2;
     padding: 20px;
     text-align: center;
     color: white;

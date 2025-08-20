@@ -40,3 +40,13 @@
         flex-direction: column;
     }
 }
+
+@media (max-width: 700px) {
+    .widthLimitationHeader {
+        display: block;
+    }
+
+    .logo-title{
+        padding-bottom: 15px;
+    }
+}

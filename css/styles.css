@@ -325,3 +325,12 @@ div.container .fw-semibold {
     margin: 0 auto;
     padding-inline: 20px;
 }
+
+.widthLimitationHeader{
+    display: flex;
+    justify-content: space-between;
+}
+
+.homeButton{
+    padding-block: 30px;
+}
