@@ -56,7 +56,6 @@ async function getPokemonCollection(pokemonList, isSearch) {
     pokemonCollection = [];
   }
 
-  // Fetch all details in parallel for speed
   const details = await Promise.all(
     pokemonList.map(async (pokemon) => {
       const detailsResponse = await fetch(pokemon.url);
@@ -65,8 +64,6 @@ async function getPokemonCollection(pokemonList, isSearch) {
   );
 
   pokemonCollection.push(...details);
-
-  // Wait until render (including images) is done
   await renderPokemon(pokemonCollection);
 }
 
